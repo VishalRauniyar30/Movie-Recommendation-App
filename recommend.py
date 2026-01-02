@@ -1,5 +1,7 @@
 import joblib
 import logging
+import os
+import subprocess
 
 # Setup logging
 logging.basicConfig(
@@ -13,13 +15,13 @@ logging.basicConfig(
 
 logging.info("🔁 Loading data...")
 
-try:
-    df = joblib.load('df_cleaned.pkl')
-    cosine_sim = joblib.load('cosine_sim.pkl')
-    logging.info("✅ Data loaded successfully.")
-except Exception as e:
-    logging.error(f"❌ Failed to load required files: {str(e)}")
-    raise e
+if not os.path.exists("df_cleaned.pkl"):
+    logging.warning("⚠️ Preprocessed files not found. Running preprocess.py...")
+    subprocess.run(["python", "preprocess.py"], check=True)
+
+df = joblib.load("df_cleaned.pkl")
+cosine_sim = joblib.load("cosine_sim.pkl")
+logging.info("✅ Data loaded successfully.")
 
 def recommend_movies(movie_name, top_n=5):
     logging.info(f"🎬 Recommending movies for: {movie_name}")
