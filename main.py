@@ -1,14 +1,16 @@
 # app.py
-import json
 import streamlit as st
 from recommend import df, recommend_movies
 from omdb_utils import get_movie_details
 
 
-config = json.load(open("config.json"))
+# config = json.load(open("config.json"))
 
 # OMDB api key
-OMDB_API_KEY = config["OMDB_API_KEY"]
+try:
+    OMDB_API_KEY = st.secrets["OMDB_API_KEY"]
+except Exception:
+    OMDB_API_KEY = None
 
 st.set_page_config(
     page_title="Movie Recommender",
